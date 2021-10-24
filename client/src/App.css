@@ -1,0 +1,103 @@
+.btnSelect {
+  width: 50px;
+  height: 50px;
+  vertical-align: top;
+  color: black;
+  font-weight: bold;
+}
+
+.globalBoard {
+  margin: auto;
+  width: fit-content;
+}
+
+.localBoard {
+  display: inline-block;
+  margin: 10px 10px;
+}
+
+.players {
+  display: flex;
+
+}
+
+.players div {
+  flex: 1;
+  text-align: center;
+  padding: 20px;
+  border-bottom: 5px solid transparent;
+}
+
+.sources {
+    width: fit-content;
+    margin:auto;
+    text-align: center;
+    border: 1px solid black;
+    padding: 2px;
+    margin-top: 8px;
+}
+
+.sources span {
+  background: gainsboro;
+  padding: 5px 10px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  margin: 2px;
+  cursor: pointer;
+}
+
+.sources span:active {
+  background: rgb(177, 176, 176);
+}
+
+.player {
+  background-color: blanchedalmond;
+}
+
+.opponentPlayer {
+  background-color: coral;
+
+}
+
+.currentPlayer {
+  border-bottom: 5px solid grey !important;
+}
+
+
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid;
+  width: fit-content;
+  margin: auto;
+  padding: 15px;
+  margin-top: 50px;
+}
+
+.button {
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  border: 2px solid black;
+  margin-top: 10px;
+}
+
+.textArea {
+  margin-top: 15px;
+  padding: 3px;
+  border: 3px solid black;
+}
+
+.home p {
+  margin: 0;
+}
+
+.rules {
+  background-color: antiquewhite;
+  padding: 30px;
+}
