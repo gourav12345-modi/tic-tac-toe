@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { socketContext } from './context';
+import Rules from './components/Rules';
 
 function Home(props) {
   const socket = useContext(socketContext);
@@ -7,9 +8,8 @@ function Home(props) {
   const createNewGame = () => {
     if (socket) {
       socket.emit("create", "Hey create a game for me...", (response) => {
-        // push to game 
         setRoomId(response.roomData.roomId);
-        props.history.push(`/${response.roomData.roomId}`, {response});
+        props.history.push(`/${response.roomData.roomId}`, { response });
       });
     }
   }
@@ -18,25 +18,29 @@ function Home(props) {
     if (socket) {
       socket.emit("join", roomId, (response) => {
         if (response.message === "joined room") {
-          props.history.push("/"+roomId, {response});
+          props.history.push("/" + roomId, { response });
         } else {
           alert(response);
         }
       })
     }
   }
-  
-  return (
-    <div>
 
+  return (
+    <>
+    <div className="homePage">
+      <h1 className="introHeading">Welcome to <span>Ultimate Tic-Tac-Toe</span> </h1>
       <div className="home">
-    <p>Create a new Game</p>  <button id="btnNewGame" className="button" onClick={createNewGame}>New Game</button>
-      <p>or</p> 
-     <p>Join room</p>
-     <input type="text" onChange={(e) => setRoomId(e.target.value)} placeholder="code" className="textArea" value={roomId}/>
-     <button id="btnJoinGame" className="button" onClick={joinRoom}>Join Game</button>
+        <p>Create a new Game</p>  <button id="btnNewGame" className="button" onClick={createNewGame}>New Game</button>
+        <p>or</p>
+        <p>Join room</p>
+        <input type="text" onChange={(e) => setRoomId(e.target.value)} placeholder="code" className="textArea" value={roomId} />
+        <button id="btnJoinGame" className="button" onClick={joinRoom}>Join Game</button>
+      </div>
     </div>
-    </div>
+      <Rules />
+    </>
+
   )
 }
 

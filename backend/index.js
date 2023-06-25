@@ -2,7 +2,7 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const { v4: uuidv4 } = require('uuid');
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 const rooms = {};
 const httpServer = createServer();
 const io = new Server(httpServer, {
