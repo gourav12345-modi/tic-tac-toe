@@ -2,11 +2,12 @@ const { createServer } = require("http");
 const { Server } = require("socket.io");
 const crypto = require("crypto");
 const { InMemorySessionStore } = require("./sessionStore");
+const { InMemoryGameStore } = require("./gameStore")
 
 const sessionStore = new InMemorySessionStore();
+const gameStore = new InMemoryGameStore();
 const randomId = () => crypto.randomBytes(8).toString("hex");
 const PORT = process.env.PORT || 8000;
-const rooms = {};
 const httpServer = createServer();
 const io = new Server(httpServer, {
   cors: {
@@ -50,7 +51,8 @@ io.on("connection", (socket) => {
   socket.on("create", (data, callback) => {
     const roomId = randomId();
     socket.join(roomId);
-    rooms[roomId] = {
+    
+    gameStore.saveGame(roomId, {
       [socket.userID]: 'X',
       "clients": [socket.userID],
       "nextPlayer": socket.userID,
@@ -58,26 +60,27 @@ io.on("connection", (socket) => {
       "globalBoardState": {},
       "declaredLocalBoard": {},
       "roomId": roomId,
-    }
+    })
+
     callback(roomId);
   })
 
   // join game 
   socket.on("join", (roomId, callback) => {
-    var room = rooms[roomId]
+    var room = gameStore.findGame(roomId)
     if (room) {
       if (room.clients.includes(socket.userID)) {
         socket.join(roomId)
-        socket.to(roomId).emit("newPlayerJoin", {roomData: rooms[roomId]});
-        callback({ message: "joined room", "roomData": rooms[roomId], symbol: rooms[roomId][socket.userID] });
+        socket.to(roomId).emit("newPlayerJoin", {roomData: room});
+        callback({ message: "joined room", "roomData": room, symbol: room[socket.userID] });
       }
       else if (room.clients.length < 2) {
         socket.join(roomId);
-        rooms[roomId][socket.userID] = 'O';
-        rooms[roomId].clients.push(socket.userID);
-        rooms[roomId].nextLocalBoard = -1;
-        socket.to(roomId).emit("newPlayerJoin", {roomData: rooms[roomId]});
-        callback({ message: "joined room", "roomData": rooms[roomId], symbol: 'O' });
+        room[socket.userID] = 'O';
+        room.clients.push(socket.userID);
+        room.nextLocalBoard = -1;
+        socket.to(roomId).emit("newPlayerJoin", {roomData: room});
+        callback({ message: "joined room", "roomData": room, symbol: 'O' });
       } else {
         callback("Hey you can't join the room as it is already filled....")
       }
@@ -92,7 +95,7 @@ io.on("connection", (socket) => {
     const { cell, roomId } = data;
     // player is in that room
     if (socket.rooms.has(roomId)) {
-      const room = rooms[roomId];
+      const room = gameStore.findGame(roomId)
       // player is allowed to play in turn
       if (room.nextPlayer === socket.userID) {
         // this cell is already occupied
@@ -256,7 +259,7 @@ io.on("connection", (socket) => {
               nextPlayer = -1;
               nextLocalBoard = 15;
             }
-            
+
             room.nextPlayer = nextPlayer;
             room.nextLocalBoard = nextLocalBoard;
 
