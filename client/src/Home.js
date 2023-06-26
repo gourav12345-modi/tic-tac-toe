@@ -7,23 +7,15 @@ function Home(props) {
   const [roomId, setRoomId] = useState("");
   const createNewGame = () => {
     if (socket) {
-      socket.emit("create", "Hey create a game for me...", (response) => {
-        setRoomId(response.roomData.roomId);
-        props.history.push(`/${response.roomData.roomId}`, { response });
+      socket.emit("create", "Hey create a game for me...", (roomId) => {
+        setRoomId(roomId);
+        props.history.push(`/${roomId}`);
       });
     }
   }
 
   const joinRoom = () => {
-    if (socket) {
-      socket.emit("join", roomId, (response) => {
-        if (response.message === "joined room") {
-          props.history.push("/" + roomId, { response });
-        } else {
-          alert(response);
-        }
-      })
-    }
+      props.history.push("/" + roomId);
   }
 
   return (
