@@ -91,7 +91,8 @@ function Game(props) {
 
   const handleClick = (e, data) => {
     e.preventDefault();
-    socket.emit("sendUpdate", { "cell": data, "roomId": gameState.roomData.roomId }, (response) => {
+    console.log(gameState.roomData)
+    socket.emit("sendUpdate", { "cell": data, "roomId": gameState.roomData.id }, (response) => {
       if (response.message === "Valid") {
         setGameState({ ...gameState, roomData: { ...gameState.roomData, globalBoardState: { ...gameState.roomData.globalBoardState, [data]: gameState.symbol }, declaredLocalBoard: { ...gameState.roomData.declaredLocalBoard, ...response.declaredLocalBoard } } })
         setActivePlayer(!activePlayer);
