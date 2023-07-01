@@ -10,21 +10,8 @@ function Game(props) {
   const { id } = useParams();
   const [gameState, setGameState] = useState({});
   useEffect(() => {
-    // let state = props.location.state;
-    // console.log(props.location)
-    // if (state && state.response && socket) {
-    //   state = state.response;
-    //   if (state && state.roomData && socket.id === state.roomData.nextPlayer) setActivePlayer(true);
-    //   else setActivePlayer(false);
-    //   if (state && state.roomData && state.roomData.clients.length === 2) {
-    //     setOpponentText("Opponent");
-    //   }
-    //   setGameState(state);
-    // }
-    // else {
     if (socket) {
       socket.emit("join", id, (response) => {
-        console.log("ROOM JOINED!!!!!!!!!!!!!!!!!!!!!!!")
         if (response.message === "joined room") {
           const state = response;
           if (state && state.roomData && socket.userID === state.roomData.nextPlayer) setActivePlayer(true);
@@ -47,7 +34,6 @@ function Game(props) {
   useEffect(() => {
     if (socket) {
       socket.on("newPlayerJoin", (data) => {
-        console.log("newPlayer ", data)
         const roomData = data.roomData
         if (data !== roomData.userID) {
           setGameState((gameState) => {
@@ -75,13 +61,13 @@ function Game(props) {
         setActivePlayer((activePlayer) => !activePlayer);
         if (globalBoardWin !== null) {
           setTimeout(() => {
-            if (globalBoardChange === -1) {
+            if (globalBoardWin === -1) {
               alert("Draw");
-            } else if (globalBoardChange === socket.userID) {
+            } else if (globalBoardWin === socket.userID) {
               alert("You won");
             } else alert("Opponnent won");
             props.history.push('/')
-          }, 5000)
+          }, 2000)
         }
 
 
@@ -91,7 +77,6 @@ function Game(props) {
 
   const handleClick = (e, data) => {
     e.preventDefault();
-    console.log(gameState.roomData)
     socket.emit("sendUpdate", { "cell": data, "roomId": gameState.roomData.id }, (response) => {
       if (response.message === "Valid") {
         setGameState({ ...gameState, roomData: { ...gameState.roomData, globalBoardState: { ...gameState.roomData.globalBoardState, [data]: gameState.symbol }, declaredLocalBoard: { ...gameState.roomData.declaredLocalBoard, ...response.declaredLocalBoard } } })
@@ -100,12 +85,12 @@ function Game(props) {
         if (globalBoardWin !== null) {
           setTimeout(() => {
             if (globalBoardWin === -1) {
-              alert("draw");
+              alert("Draw");
             } else {
               alert("You won!");
             }
             props.history.push("/");
-          }, 5000)
+          }, 2000)
         }
 
       }
