@@ -16,7 +16,7 @@ function App(props) {
   const [socket, setSocket] = useState(null);
   useEffect(() => {
     const sessionID = localStorage.getItem("sessionID")
-    const newSocket = io("http://localhost:8000", {
+    const newSocket = io(process.env.REACT_APP_BACKEND_URL, {
       auth: {
         sessionID,
       }

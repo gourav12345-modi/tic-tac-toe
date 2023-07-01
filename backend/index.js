@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const crypto = require("crypto");
@@ -12,7 +13,7 @@ const PORT = process.env.PORT || 8000;
 const httpServer = createServer();
 const io = new Server(httpServer, {
   cors: { 
-    origin: "http://localhost:3000",
+    origin: process.env.FRONTEND_URL,
   }
 });
 
