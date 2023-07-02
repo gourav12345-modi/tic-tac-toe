@@ -2,3 +2,12 @@
     background-color: antiquewhite;
     padding: 30px;
   }
+
+ul {
+  line-height: 150%;
+  word-spacing: 4px;
+}
+
+ul li {
+  margin-bottom: 10px;
+}
