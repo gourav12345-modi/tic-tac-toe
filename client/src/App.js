@@ -11,6 +11,7 @@ import './App.css';
 import Home from './Home';
 import Game from './Game';
 import { io } from "socket.io-client";
+import Lost from './Lost';
 
 function App(props) {
   const [socket, setSocket] = useState(null);
@@ -43,6 +44,7 @@ function App(props) {
           <Switch>
             <Route path='/' exact component={Home} />
             <Route path='/:id' component={Game} />
+            <Route path='*' component={Lost} />
           </Switch>
         </Router>
       </div>
